@@ -1,5 +1,5 @@
 import java.awt.Color;
-public class BMove {
+public class UPrimeMove {
 	int amount;
 	Corner piece;
 	Color[] colorSwap;
@@ -7,10 +7,10 @@ public class BMove {
 	int y;
 	int z;
 	int[] coords;
-	public BMove(Corner p) {
+	public UPrimeMove(Corner p) {
 		piece = p;
 		if(piece != null) {
-			colorSwap = new Color[] {(piece.getColors())[1], (piece.getColors())[0], (piece.getColors())[2]};
+			colorSwap = new Color[] {(piece.getColors())[2], (piece.getColors())[1], (piece.getColors())[0]};
 		}
 		coords = piece.getCoords(); 
 		x = coords[0];
@@ -18,26 +18,26 @@ public class BMove {
 		z = coords[2];
 	}
 	public boolean check(){
-		if(piece != null && z== -1) {
+		if(piece != null && y== 1) {
 			return true;			
 		}
 		return false;
 	}
 	public Corner move() {
-	if(x==-1 && y==1) {
-		piece.setCoords(new int[]{-1,-1,-1});
+	if(x==-1 && z==1) {
+		piece.setCoords(new int[]{1,1,1});
 		piece.setColors(colorSwap);
 	}
-	if(x==-1 && y==-1) {
-		piece.setCoords(new int[]{1,-1,-1});
+	if(x==-1 && z==-1) {
+		piece.setCoords(new int[]{-1,1,1});
 		piece.setColors(colorSwap);
 	}
-	if(x==1 && y==-1) {
-		piece.setCoords(new int[]{1,1,-1});
-		piece.setColors(colorSwap);
-	}
-	if((x==1 && y ==1)) {
+	if(x==1 && z==-1) {
 		piece.setCoords(new int[]{-1,1,-1});
+		piece.setColors(colorSwap);
+	}
+	if((x==1 && z ==1)) {
+		piece.setCoords(new int[]{1,1,-1});
 		piece.setColors(colorSwap);
 	}
 	return piece;
