@@ -29,19 +29,19 @@ public class DPrimeMove {
 	public Corner move() {
 
 	if(x==-1 && z==1) {
-		piece.setCoords(new int[]{-1,-1,1});
+		piece.setCoords(new int[]{-1,-1,-1});
 		piece.setColors(colorSwap);
 	}
 	if(x==-1 && z==-1) {
-		piece.setCoords(new int[]{1,-1,1});
-		piece.setColors(colorSwap);
-	}
-	if(x==1 && z==-1) {
 		piece.setCoords(new int[]{1,-1,-1});
 		piece.setColors(colorSwap);
 	}
+	if(x==1 && z==-1) {
+		piece.setCoords(new int[]{1,-1,1});
+		piece.setColors(colorSwap);
+	}
 	if((x==1 && z ==1)) {
-		piece.setCoords(new int[]{-1,-1,-1});
+		piece.setCoords(new int[]{-1,-1, 1});
 		piece.setColors(colorSwap);
 	}
 	return piece;

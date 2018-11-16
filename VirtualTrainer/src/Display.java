@@ -1,43 +1,47 @@
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Arrays;
+import java.util.Random;
 import java.util.Scanner;
 
 import javax.swing.*;
 public class Display extends JPanel {
-	int offset;
-	int boxLen;
-	RMove r;
-	LMove l;
-	UMove u;
-	DMove d;
-	FMove f;
-	BMove b;
-	RPrimeMove rp;
-	LPrimeMove lp;
-	UPrimeMove up;
-	DPrimeMove dp;
-	FPrimeMove fp;
-	BPrimeMove bp;
-	Corner wgo;
-	Corner wbo;
-	Corner wbr;
-	Corner wgr;
-	Corner ygo;
-	Corner ybo;
-	Corner ybr;
-	Corner ygr;
-	String key;
-	Corner[] corners;
-	Graphics2D g2d;
-	Color[] piece1;
-	Color[] piece2;
-	Color[] piece3;
-	Color[] piece4;
-	Color[] piece5;
-	Color[] piece8;
-	double magnifier;
-	TempDisplayCube rearrange;
+	private JButton scrambleButton;
+	private int offset;
+	private int boxLen;
+	private RMove r;
+	private LMove l;
+	private UMove u;
+	private DMove d;
+	private FMove f;
+	private BMove b;
+	private RPrimeMove rp;
+	private LPrimeMove lp;
+	private UPrimeMove up;
+	private DPrimeMove dp;
+	private FPrimeMove fp;
+	private BPrimeMove bp;
+	private Corner wgo;
+	private Corner wbo;
+	private Corner wbr;
+	private Corner wgr;
+	private Corner ygo;
+	private Corner ybo;
+	private Corner ybr;
+	private Corner ygr;
+	private String key;
+	private Corner[] corners;
+	private Graphics2D g2d;
+	private Color[] piece1;
+	private Color[] piece2;
+	private Color[] piece3;
+	private Color[] piece4;
+	private Color[] piece5;
+	private Color[] piece8;
+	private double magnifier;
+	private TempDisplayCube rearrange;
+	private GrabAlg ga = new GrabAlg();
 	public Display(Corner[] c) {
 		wgo = c[0];
 		wbo = c[1];
@@ -55,6 +59,16 @@ public class Display extends JPanel {
 		piece5 = c[4].getColors();
 		piece8 = c[7].getColors();
 		rearrange = new TempDisplayCube();
+		scrambleButton = new JButton("New Scramble");
+        scrambleButton.setFont(new Font("TimesRoman", Font.PLAIN, 50));
+        scrambleButton.setHorizontalTextPosition(AbstractButton.CENTER);
+        scrambleButton.setRequestFocusEnabled(false);
+        add(scrambleButton);
+		setFocusTraversalKeysEnabled(false);
+		setFocusable(true);
+		requestFocusInWindow();
+		KeyListening kl = new KeyListening();
+		addKeyListener(kl);
 	}
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -98,16 +112,17 @@ public class Display extends JPanel {
 		g2d.fillRect(offset, offset + 3*boxLen, boxLen, boxLen);
 		g2d.setColor(piece8[2]);
 		g2d.fillRect(offset + boxLen, offset + 3*boxLen, boxLen, boxLen);
-		revalidate();
-		repaint();
-		setFocusTraversalKeysEnabled(false);
-		setFocusable(true);
-		requestFocusInWindow();
-		KeyListening kl = new KeyListening();
-		addKeyListener(kl);
+		
+		g2d.setColor(piece3[0]);
+		g2d.fillRect(offset + 2*boxLen,  offset, 10, boxLen);
+		g2d.setColor(piece4[0]);
+		g2d.fillRect(offset + 2*boxLen,  offset + boxLen, 10, boxLen);
+		g2d.setColor(piece4[0]);
+		g2d.fillRect(offset + 2*boxLen,  offset + 2*boxLen, 10, boxLen);
+		g2d.setColor(piece8[0]);
+		g2d.fillRect(offset + 2*boxLen,  offset + 3*boxLen, 10, boxLen);
 	}
-	public void update(Corner[] c){
-		System.out.println("The update method is called");
+	public void update(Corner[] c, boolean check){
 		wgo = c[0];
 		wbo = c[1];
 		wbr = c[2];
@@ -141,6 +156,14 @@ public class Display extends JPanel {
 		g2d.fillRect(offset-10,  offset, 10, boxLen);
 		g2d.setColor(piece1[0]);
 		g2d.fillRect(offset -10,  offset + boxLen, 10, boxLen);
+		g2d.setColor(piece1[2]);
+		g2d.fillRect(offset, offset + 2*boxLen, boxLen, boxLen);
+		g2d.setColor(piece4[2]);
+		g2d.fillRect(offset+ boxLen, offset + 2*boxLen, boxLen, boxLen);
+		g2d.setColor(piece5[2]);
+		g2d.fillRect(offset, offset + 3*boxLen, boxLen, boxLen);
+		g2d.setColor(piece8[2]);
+		g2d.fillRect(offset + boxLen, offset + 3*boxLen, boxLen, boxLen);
 		
 		g2d.setColor(piece5[1]);
 		g2d.fillRect(offset,  offset + 4*boxLen +10, boxLen, 10);
@@ -151,25 +174,76 @@ public class Display extends JPanel {
 		g2d.setColor(piece5[0]);
 		g2d.fillRect(offset -10,  offset + 3*boxLen, 10, boxLen);
 		
-		g2d.setColor(piece1[2]);
-		g2d.fillRect(offset, offset + 2*boxLen, boxLen, boxLen);
-		g2d.setColor(piece4[2]);
-		g2d.fillRect(offset+ boxLen, offset + 2*boxLen, boxLen, boxLen);
-		g2d.setColor(piece5[2]);
-		g2d.fillRect(offset, offset + 3*boxLen, boxLen, boxLen);
-		g2d.setColor(piece8[2]);
-		g2d.fillRect(offset + boxLen, offset + 3*boxLen, boxLen, boxLen);
+		g2d.setColor(piece3[0]);
+		g2d.fillRect(offset + 2*boxLen,  offset, 10, boxLen);
+		g2d.setColor(piece4[0]);
+		g2d.fillRect(offset + 2*boxLen,  offset + boxLen, 10, boxLen);
+		g2d.setColor(piece4[0]);
+		g2d.fillRect(offset + 2*boxLen,  offset + 2*boxLen, 10, boxLen);
+		g2d.setColor(piece8[0]);
+		g2d.fillRect(offset + 2*boxLen,  offset + 3*boxLen, 10, boxLen);
 		revalidate();
 		repaint();
+		if (check) {checkSolved();
+		System.out.println("checked");}else {System.out.println("Not checked");}
 	}	
+	
+	public void scramble() {
+		ReadAlgorithm ra = new ReadAlgorithm();
+		ga.openFile("scrams1.txt");
+		ga.readFileFirst();
+		ga.closeFile();
+		ga.openFile("scrams1.txt");
+		String[][] list = ga.readFileSecond();
+		//
+		ga.closeFile();
+		Random r = new Random();
+		int randInt = r.nextInt(list.length);
+		String[] moves = list[randInt];
+		corners = ra.execute(corners, moves);
+		corners = rearrange.rearrange(corners);
+		update(corners, false);
+		System.out.println("Scrambled");
+	}
+	public void checkSolved(){
+		corners = rearrange.rearrange(corners);
+		Corner[] uFace = new Corner[] {corners[0], corners[1], corners[2], corners[3]};
+		Corner[] dFace = new Corner[] {corners[4], corners[5], corners[6], corners[7]};
+		Corner[] fFace = new Corner[] {corners[0], corners[3], corners[4], corners[7]};
+		Corner[] bFace = new Corner[] {corners[1], corners[2], corners[5], corners[6]};
+		Corner[] rFace = new Corner[] {corners[2], corners[3], corners[6], corners[7]};
+		int matches = 0;
+		int solvedFaces = 0;
+		for(Corner testColors: uFace) {
+			if(testColors.getColors()[1]==uFace[0].getColors()[1]) {matches++;}
+		} if (matches==4) {solvedFaces++;}
+		matches = 0;
+		for(Corner testColors: dFace) {
+			if(testColors.getColors()[1]==dFace[0].getColors()[1]) {matches++;}
+		} if (matches==4) {solvedFaces++;}
+		matches = 0;
+		for(Corner testColors: fFace) {
+			if(testColors.getColors()[2]==fFace[0].getColors()[2]) {matches++;}
+		} if (matches==4) {solvedFaces++;}
+		matches = 0;
+		for(Corner testColors: bFace) {
+			if(testColors.getColors()[2]==bFace[0].getColors()[2]) {matches++;}
+		} if (matches==4) {solvedFaces++;}
+		matches = 0;
+		for(Corner testColors: rFace) {
+			if(testColors.getColors()[0]==rFace[0].getColors()[0]) {matches++;}
+		} if (matches==4) {solvedFaces++;}
+		if(solvedFaces==5) {
+			scramble();
+			System.out.println("solved");
+		}
+	}
 	private class KeyListening implements KeyListener{
 		boolean pressed = false;
 		public void keyTyped(KeyEvent e) {
 		}
 		public void keyPressed(KeyEvent e) {
-			System.out.println(e.getKeyCode());
-			if (!pressed) {
-				System.out.println(pressed);
+			 {
 				pressed = true;
 			int key = e.getKeyCode();
 				switch(key) {
@@ -209,13 +283,13 @@ public class Display extends JPanel {
 						if(up.check()) {corners[x] = up.move();}
 					}				
 					break;
-				case 83:
+				case 76:
 					for(int x = 0; x < corners.length; x++) {				
 						dp = new DPrimeMove(corners[x]);
 						if(dp.check()) {corners[x] = dp.move();}
 					}
 					break;
-				case 76:
+				case 83:
 					for(int x = 0; x < corners.length; x++) {				
 						d = new DMove(corners[x]);
 						if(d.check()) {corners[x] = d.move();}
@@ -246,7 +320,9 @@ public class Display extends JPanel {
 					}
 					break;
 			}
-				update(rearrange.rearrange(corners));
+				corners = rearrange.rearrange(corners);
+				update(rearrange.rearrange(corners), true);
+				
 				
 		}
 			}

@@ -28,6 +28,7 @@ public static void main(String[] args) {
 	frame.setFocusTraversalKeysEnabled(false);
 	frame.add(d);
 	frame.setVisible(true);
+	
 }
 public void update() {
 	frame.setVisible(false);

@@ -19,24 +19,25 @@ public class LMove {
 	}
 	public boolean check(){
 		if(piece != null &&(piece.getCoords())[0]== -1) {
+
 			return true;			
 		}
 		return false;
 	}
 	public Corner move() {
-	if(y==1 && z==1) {
+	if(y==-1 && z==-1) {
 		piece.setCoords(new int[]{-1,1,-1});
 		piece.setColors(colorSwap);
 	}
-	if(y==1 && z==-1) {
+	if(y==-1 && z==1) {
 		piece.setCoords(new int[]{-1,-1,-1});
 		piece.setColors(colorSwap);
 	}
-	if(y==-1 && z==-1) {
+	if(y==1 && z==1) {
 		piece.setCoords(new int[]{-1,-1,1});
 		piece.setColors(colorSwap);
 	}
-	if((y==-1 && z ==1)) {
+	if((y==1 && z ==-1)) {
 		piece.setCoords(new int[]{-1,1,1});
 		piece.setColors(colorSwap);
 	}
